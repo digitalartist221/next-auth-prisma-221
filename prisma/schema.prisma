@@ -1,0 +1,29 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Modèle pour les utilisateurs
+model User {
+  id        Int       @id @default(autoincrement()) // Identifiant unique, incrémenté automatiquement
+  name      String    @db.VarChar(100)             // Nom de l'utilisateur (limité à 100 caractères)
+  email     String    @unique                      // Adresse email unique
+  password  String                                 // Mot de passe (doit être haché)
+  roleId    Int                                    // Identifiant du rôle
+  role      Role      @relation(fields: [roleId], references: [id]) // Relation avec le modèle Role
+  createdAt DateTime  @default(now())              // Date de création
+  updatedAt DateTime  @updatedAt                   // Date de mise à jour automatique
+}
+
+// Modèle pour les rôles
+model Role {
+  id        Int      @id @default(autoincrement()) // Identifiant unique, incrémenté automatiquement
+  name      String   @unique                      // Nom du rôle unique (ex. "Admin", "User")
+  users     User[]                               // Relation inverse : liste des utilisateurs ayant ce rôle
+  createdAt DateTime @default(now())             // Date de création
+  updatedAt DateTime @updatedAt                  // Date de mise à jour automatique
+}
