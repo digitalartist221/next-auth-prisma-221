@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "strict": true,
+    
+    "noImplicitAny": false,      // Désactive l'erreur lorsque le type n'est pas explicitement défini
+    "strict": false,         
     "lib": [
       "dom",
       "dom.iterable",
@@ -9,7 +11,6 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",

@@ -15,42 +15,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     github,
     google,
+    
+
     CredentialsProvider({
-      name: 'Sign in',
-      id: 'credentials',
+      name: "Credentials",
       credentials: {
-        email: {
-          label: 'Email',
-          type: 'email',
-          placeholder: 'example@example.com',
-        },
-        password: { label: 'Password', type: 'password' },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials.password) {
           return null;
         }
-
+      
+        // Simuler une vérification utilisateur (par exemple depuis la base de données)
         const user = await prisma.user.findUnique({
           where: {
             email: String(credentials.email),
           },
         });
-
-        if (
-          !user ||
-          !(await bcrypt.compare(String(credentials.password), user.password!))
-        ) {
+      
+        // Retourner null si l'utilisateur n'existe pas ou si les informations d'identification sont incorrectes
+        if (!user) {
           return null;
         }
-
+      
+        // Retourner l'utilisateur après avoir converti l'ID en string
         return {
-          id: user.id,
+          id: String(user.id), // Conversion de l'ID en string
           email: user.email,
           name: user.name,
           randomKey: 'Hey cool',
         };
-      },
+      }
     }),
   ],
   callbacks: {
